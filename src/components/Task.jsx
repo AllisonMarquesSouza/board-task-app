@@ -21,7 +21,7 @@ export default function Task({
       {tasks.map((task) => (
         <li
           key={task.id}
-          className="flex gap-2 p-4 bg-slate-900 text-slate-50 rounded-lg"
+          className="flex gap-2 p-4 bg-[#2C2C2C]  text-[#F3F4F4]  rounded-lg"
         >
           {task.id === editingTaskId ? (
             // EDITING VERSION
@@ -39,10 +39,15 @@ export default function Task({
               </button>
 
               <div className="flex justify-between w-full">
-                <button className="bg-slate-900 text-white rounded-full">
+                <button
+                  className={`bg-[#2C2C2C]  text-[#F3F4F4] rounded-full ${task.isCompleted && "line-through"}`}
+                >
                   {task.title}
                 </button>
-                <button onClick={() => onEditTaskClick(task.id)}>
+                <button
+                  className="hover:bg-[#F3F4F4]/50 transition"
+                  onClick={() => onEditTaskClick(task.id)}
+                >
                   <SquarePen />
                 </button>
               </div>
