@@ -5,7 +5,7 @@ export default function InputText({ onChange, placeholder, value }) {
       type="text"
       value={value}
       placeholder={placeholder}
-      className="p-2 rounded-lg"
+      className="w-full rounded-lg p-2"
     />
   );
 }

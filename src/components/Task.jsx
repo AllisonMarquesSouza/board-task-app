@@ -17,11 +17,19 @@ export default function Task({
   }
 
   return (
-    <ul className="flex flex-col gap-2 bg-slate-50 rounded-md shadow">
+    <ul className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-1">
       {tasks.map((task) => (
         <li
           key={task.id}
-          className="flex gap-2 p-4 bg-[#2C2C2C]  text-[#F3F4F4]  rounded-lg"
+          draggable //allowing to drag this element
+          /*
+          “At the moment this task starts being dragged,
+          save its ID so the place where it is dropped knows which task it was.”
+           */
+          onDragStart={(event) => {
+            event.dataTransfer.setData("taskId", task.id);
+          }}
+          className="flex gap-2 rounded-lg bg-[#2C2C2C] p-3 text-[#F3F4F4] sm:p-4"
         >
           {task.id === editingTaskId ? (
             // EDITING VERSION
@@ -34,18 +42,21 @@ export default function Task({
           ) : (
             // NORMAL VERSION (iplement like another component later...)
             <>
-              <button onClick={() => onTaskClick(task.id)}>
+              <button
+                className="shrink-0 rounded p-1 transition hover:bg-[#F3F4F4]/15"
+                onClick={() => onTaskClick(task.id)}
+              >
                 {task.isCompleted ? <CheckIcon /> : <Circle />}
               </button>
 
-              <div className="flex justify-between w-full">
+              <div className="flex min-w-0 flex-1 items-start justify-between gap-2">
                 <button
-                  className={`bg-[#2C2C2C]  text-[#F3F4F4] rounded-full ${task.isCompleted && "line-through"}`}
+                  className={`min-w-0 flex-1 break-words rounded-full bg-[#2C2C2C] text-left text-[#F3F4F4] ${task.isCompleted && "line-through"}`}
                 >
                   {task.title}
                 </button>
                 <button
-                  className="hover:bg-[#F3F4F4]/50 transition"
+                  className="shrink-0 rounded p-1 transition hover:bg-[#F3F4F4]/50"
                   onClick={() => onEditTaskClick(task.id)}
                 >
                   <SquarePen />

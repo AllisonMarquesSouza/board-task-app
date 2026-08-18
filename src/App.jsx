@@ -53,11 +53,29 @@ function App() {
             isCompleted: action.isCompleted,
           },
         ];
+      case "TASK_MOVED":
+        return tasks.map((task) => {
+          if (task.id === action.taskId) {
+            return {
+              ...task,
+              collumn: action.newCollumn,
+            };
+          }
+
+          return task;
+        });
       default:
         return tasks;
     }
   }
 
+  function onMoveTask(taskId, newCollumn) {
+    dispatchTasks({
+      type: "TASK_MOVED",
+      taskId: taskId,
+      newCollumn: newCollumn,
+    });
+  }
   function onTaskClick(taskId) {
     /**
      *dispatch is responsible to send the action to the function that manage the logic
@@ -166,13 +184,13 @@ function App() {
 
   return (
     //main div nested layoult
-    <div className="w-screen h-screen flex flex-col gap-10 bg-[#2C2C2C]">
-      <div className="flex text-center">
+    <div className="flex min-h-dvh w-full flex-col gap-4 overflow-hidden bg-[#2C2C2C] p-3 sm:gap-8 sm:p-6">
+      <header className="flex items-center gap-3">
         <ButtonMenu></ButtonMenu>
-        <h1 className="text-4xl text-[#F3F4F4]  font-bold">Kanban</h1>;
-      </div>
+        <h1 className="text-3xl font-bold text-[#F3F4F4] sm:text-4xl">Kanban</h1>
+      </header>
 
-      <ul className="flex gap-4 pl-6 pr-6 w-full overflow-x-auto max-h-screen  shrink-0 ">
+      <ul className="flex min-h-0 flex-1 gap-3 overflow-x-auto overflow-y-hidden pb-3 sm:gap-4 sm:pb-4">
         {/* tells a web browser how to handle content that is too wide for its box on the left and right sides. It adds a horizontal scrollbar only if the content is wider than the box. If the content fits inside, no scrollbar appears */}
         {boards.map((board) => {
           return (
@@ -186,13 +204,14 @@ function App() {
                 onAddNewTask={onAddNewTask}
                 onDeleteTask={onDeleteTask}
                 onDeleteBoard={onDeleteBoard}
+                onMoveTask={onMoveTask}
               />
             </li>
           );
         })}
         <button
           onClick={() => setIsAddingBoard(true)}
-          className="flex items-center gap-2 w-25 h-14 p-4 bg-[#F3F4F4] text-[#2C2C2C] hover:bg-[#F3F4F4]/50 transition rounded-lg"
+          className="flex h-14 min-w-36 shrink-0 items-center gap-2 rounded-lg bg-[#F3F4F4] p-4 text-[#2C2C2C] transition hover:bg-[#F3F4F4]/50"
         >
           <Plus />
           <span>Add board</span>
@@ -209,3 +228,9 @@ function App() {
 }
 
 export default App;
+
+//check about params, like && using this operator in the html
+//PUT DRAG AND DROP, SEE HOW CAN I DO THAT...
+//PUT ROUTERS... TO A PAGE WHERE YOU DESCRIBE YOURSELF
+//SE HOW USE REF, AND USE EFFECT WORK PROPERLY...
+//USE EXTERNAL API TO GET THE TASKS, BOARDS ...

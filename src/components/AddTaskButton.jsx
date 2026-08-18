@@ -17,10 +17,10 @@ export default function AddTaskButton({ onAddNewTask, board, boards }) {
     <>
       <button
         onClick={activeNewTask}
-        className="flex items-center mt-auto w-full p-2 relative bg-[#2C2C2C] text-[#F3F4F4] hover:bg-[#2C2C2C]/50 transition rounded-full"
+        className="relative mt-auto flex min-h-11 w-full items-center rounded-full bg-[#2C2C2C] p-2 text-[#F3F4F4] transition hover:bg-[#2C2C2C]/50"
       >
         <Plus />
-        <span className="absolute left-1/2 -translate-x-1/2">Add Task</span>
+        <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap">Add Task</span>
       </button>
 
       {isAddingTask && (

@@ -12,8 +12,8 @@ export default function NewBoard({ cancelNewBoard, onAddNewBoard }) {
     }
   }
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-[#2C2C2C]/50">
-      <div className="flex flex-col gap-8 bg-[#2C2C2C] p-5 size-72 rounded-lg">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#2C2C2C]/50 p-4">
+      <div className="flex w-full max-w-sm flex-col gap-6 rounded-lg bg-[#2C2C2C] p-4 sm:gap-8 sm:p-5">
         <h1 className="text-center text-xl font-bold text-[#F3F4F4]">
           New Board
         </h1>
@@ -25,7 +25,7 @@ export default function NewBoard({ cancelNewBoard, onAddNewBoard }) {
           />
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <FormButton onClick={() => handleNewBoard(newBoardName)}>
             Save
             {/* saved, closes */}

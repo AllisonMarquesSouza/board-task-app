@@ -23,7 +23,7 @@ export default function EditTask({
         value={editedTitle}
         onChange={(event) => setEditedTitle(event.target.value)}
       />
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row">
         <FormButton onClick={() => handleSave(task.id, editedTitle)}>
           Save
         </FormButton>

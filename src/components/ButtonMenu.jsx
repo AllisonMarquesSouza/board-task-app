@@ -5,15 +5,15 @@ export default function ButtonMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="flex flex-col">
+    <div className="relative z-20">
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className=" text-[#F3F4F4] hover:bg-[#F3F4F4]/50 transition p-2 rounded-full"
+        className="rounded-full p-2 text-[#F3F4F4] transition hover:bg-[#F3F4F4]/50"
       >
         <Menu></Menu>
       </button>
       {isMenuOpen && (
-        <div className="flex flex-col gap-2 text-white ">
+        <div className="absolute left-0 top-full mt-2 flex min-w-max flex-col gap-2 rounded-md bg-[#2C2C2C] p-2 text-white shadow-lg">
           <a
             href="https://github.com/AllisonMarquesSouza/board-task-app"
             target="_blank"
