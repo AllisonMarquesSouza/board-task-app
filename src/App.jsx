@@ -187,7 +187,9 @@ function App() {
     <div className="flex min-h-dvh w-full flex-col gap-4 overflow-hidden bg-[#2C2C2C] p-3 sm:gap-8 sm:p-6">
       <header className="flex items-center gap-3">
         <ButtonMenu></ButtonMenu>
-        <h1 className="text-3xl font-bold text-[#F3F4F4] sm:text-4xl">Kanban</h1>
+        <h1 className="text-3xl font-bold text-[#F3F4F4] sm:text-4xl">
+          Kanban
+        </h1>
       </header>
 
       <ul className="flex min-h-0 flex-1 gap-3 overflow-x-auto overflow-y-hidden pb-3 sm:gap-4 sm:pb-4">
@@ -228,9 +230,3 @@ function App() {
 }
 
 export default App;
-
-//check about params, like && using this operator in the html
-//PUT DRAG AND DROP, SEE HOW CAN I DO THAT...
-//PUT ROUTERS... TO A PAGE WHERE YOU DESCRIBE YOURSELF
-//SE HOW USE REF, AND USE EFFECT WORK PROPERLY...
-//USE EXTERNAL API TO GET THE TASKS, BOARDS ...
