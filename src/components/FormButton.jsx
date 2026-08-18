@@ -8,19 +8,3 @@ export default function FormButton({ children, onClick }) {
     </button>
   );
 }
-/**
- flex-1 is a Tailwind utility that means:
- 
- flex: 1 1 0%;
- 
- The important idea is:
- 
- "Take the available remaining space inside the flex container."
-  
-
-┌──────────────────────────────────────────────┐
-│                                              │
-│                                              │
-│Button              takes remaining space     │
-└──────────────────────────────────────────────┘
- */

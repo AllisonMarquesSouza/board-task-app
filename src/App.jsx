@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { v4 } from "uuid";
 import "./App.css";
 import Board from "./components/Board";
@@ -7,34 +7,93 @@ import ButtonMenu from "./components/ButtonMenu";
 import NewBoard from "./components/NewBoard";
 
 function App() {
-  const [tasks, setTasks] = useState(
-    JSON.parse(localStorage.getItem("tasks")) || [],
-  );
+  const initialTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-  const [boards, setBoards] = useState(
-    JSON.parse(localStorage.getItem("boards")) || [
-      {
-        id: v4(),
-        name: "TO-DO",
-      },
-      {
-        id: v4(),
-        name: "DOING",
-      },
-      {
-        id: v4(),
-        name: "DONE",
-      },
-    ],
-  );
+  const [tasks, dispatchTasks] = useReducer(tasksReducer, initialTasks);
+  //tasks - current value, dispatch(function to call in the handler), userReducer(functionToManageAllCases, initalValueIfThereIsAny)
+  function tasksReducer(tasks, action) {
+    /*
+     * the function inside the reducer receveis (currentValue(Always a array? check this.), action(brought by  dispatch))
+     * React receives the returned array and automatically uses it as the new tasks value, or current value of the reducer.
+     * You do not write something like tasks = newTasks yourself.
+     */
 
-  const [isAddingBoard, setIsAddingBoard] = useState(false);
+    switch (action.type) {
+      case "TASK_COMPLETED":
+        return tasks.map((task) => {
+          if (task.id === action.taskId) {
+            return {
+              ...task,
+              isCompleted: !task.isCompleted,
+            };
+          }
+          return task;
+        });
 
-  function activeNewBoard() {
-    setIsAddingBoard(true); //if is true, then it'll show the NewTask component...
+      case "TASK_UPDATE":
+        return tasks.map((task) => {
+          if (task.id === action.taskId) {
+            return {
+              ...task,
+              title: action.newTitle,
+            };
+          }
+          return task;
+        });
+      case "TASK_DELETE":
+        return tasks.filter((task) => task.id !== action.taskId);
+      case "TASK_ADD":
+        console.log("got here - " + action.title);
+        return [
+          ...tasks,
+          {
+            id: action.id,
+            title: action.title,
+            collumn: action.collumn,
+            isCompleted: action.isCompleted,
+          },
+        ];
+      default:
+        return tasks;
+    }
   }
-  function cancelNewBoard() {
-    setIsAddingBoard(false); //if is true, then it'll show the NewTask component...
+
+  function onTaskClick(taskId) {
+    /**
+     *dispatch is responsible to send the action to the function that manage the logic
+     * So, the “attributes” inside dispatch are just properties of the action object you designed. type
+      identifies what should happen, and taskId provides the data needed to do it.
+     */
+    dispatchTasks({
+      type: "TASK_COMPLETED",
+      taskId: taskId,
+    });
+  }
+  function onSaveEditedTask(taskId, newTitle) {
+    dispatchTasks({
+      type: "TASK_UPDATE",
+      taskId: taskId,
+      newTitle: newTitle,
+    });
+    return true;
+  }
+
+  function onDeleteTask(taskId) {
+    dispatchTasks({
+      type: "TASK_DELETE",
+      taskId: taskId,
+    });
+  }
+
+  function onAddNewTask(title, collumn) {
+    dispatchTasks({
+      type: "TASK_ADD",
+      id: v4(),
+      title: title,
+      collumn: collumn,
+      isCompleted: false,
+    });
+    return true;
   }
 
   /*
@@ -46,72 +105,64 @@ function App() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  //ask if I can have several useEffect of different arrays or things
+  const inicialBoards = JSON.parse(localStorage.getItem("boards")) || [
+    {
+      id: v4(),
+      name: "TO-DO",
+    },
+    {
+      id: v4(),
+      name: "DOING",
+    },
+    {
+      id: v4(),
+      name: "DONE",
+    },
+  ];
+
+  const [boards, dispatchBoards] = useReducer(boardsReducer, inicialBoards);
+
   useEffect(() => {
     localStorage.setItem("boards", JSON.stringify(boards));
   }, [boards]);
 
-  function onTaskClick(taskId) {
-    const newTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        return { ...task, isCompleted: !task.isCompleted };
+  function boardsReducer(boards, action) {
+    switch (action.type) {
+      case "BOARD_ADD": {
+        return [
+          ...boards,
+          {
+            id: action.id,
+            name: action.name,
+          },
+        ];
       }
-      return task;
-    });
-    setTasks(newTasks);
-  }
-
-  function onSaveEditedTask(taskId, newTitle) {
-    const newTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        return {
-          ...task,
-          title: newTitle,
-        };
+      case "BOARD_DELETE": {
+        return boards.filter((board) => board.id !== action.id);
       }
-
-      return task;
-    });
-
-    setTasks(newTasks);
-    return true;
-  }
-
-  function onDeleteTask(taskId) {
-    const newTasks = tasks.filter((task) => task.id !== taskId);
-    setTasks(newTasks);
-    return true;
-  }
-
-  function onAddNewTask(title, collumn) {
-    const newTask = {
-      id: v4(), //random id, external library
-      title: title,
-      collumn: collumn,
-      isCompleted: false,
-    };
-    const newTasks = [...tasks, newTask];
-    setTasks(newTasks);
-    return true;
+      default:
+        return boards;
+    }
   }
 
   function onAddNewBoard(name) {
-    console.log(name);
-
-    const newBoard = {
+    dispatchBoards({
+      type: "BOARD_ADD",
       id: v4(),
       name: name,
-    };
-    const newBoards = [...boards, newBoard];
-    setBoards(newBoards);
+    });
     return true;
   }
 
   function onDeleteBoard(boardId) {
-    const newBoards = boards.filter((board) => board.id !== boardId);
-    setBoards(newBoards);
+    dispatchBoards({
+      type: "BOARD_DELETE",
+      id: boardId,
+    });
     return true;
   }
+
+  const [isAddingBoard, setIsAddingBoard] = useState(false);
 
   return (
     //main div nested layoult
@@ -140,7 +191,7 @@ function App() {
           );
         })}
         <button
-          onClick={activeNewBoard}
+          onClick={() => setIsAddingBoard(true)}
           className="flex items-center gap-2 w-25 h-14 p-4 bg-[#F3F4F4] text-[#2C2C2C] hover:bg-[#F3F4F4]/50 transition rounded-lg"
         >
           <Plus />
@@ -148,7 +199,7 @@ function App() {
         </button>
         {isAddingBoard && (
           <NewBoard
-            cancelNewBoard={cancelNewBoard}
+            cancelNewBoard={() => setIsAddingBoard(false)}
             onAddNewBoard={onAddNewBoard}
           />
         )}

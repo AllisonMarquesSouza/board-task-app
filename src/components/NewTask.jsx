@@ -22,7 +22,8 @@ So the outer <div> covers the entire scree
   const [optionBoardName, setOptionBoardName] = useState(board.name);
   /*
    * Defined the optionBoardName by default the board.name, it means that the board you click in,
-   * will also be selected to add a new task. Which makes total sense
+   * will also be selected to add a new task. Which makes total sense, although it's not recommended to pass props in states
+   * in this case, I found this option. I'll check this later.
    * REMEMBER -> OptionBoardName === board.name (I kept the same pattern, to make things easier.)
    */
   const [title, setTitle] = useState(null);
@@ -51,15 +52,16 @@ So the outer <div> covers the entire scree
             value={optionBoardName}
             onChange={(event) => setOptionBoardName(event.target.value)}
           >
-            {boards.map((boardGet) => {
-              return (
-                //I need to return the value, this is a function, so the function of component will only get the value
-                // if it is returned
-                <option key={boardGet.id} value={boardGet.name}>
-                  {boardGet.name}
-                </option>
-              );
-            })}
+            {boards.map((boardGet) => (
+              /* The parentheses () already return automatically.
+               * So, as a preference:
+               *  Only JSX to return → (...)
+               * Variables, if statements, or multiple steps → { ... return (...) } curly brackets
+               */
+              <option key={boardGet.id} value={boardGet.name}>
+                {boardGet.name}
+              </option>
+            ))}
           </select>
         </div>
 
